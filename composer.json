@@ -1,0 +1,20 @@
+{
+    "name": "lihq1403\/think-rbac",
+    "description": "thinkphp-rbac",
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "lihq1403",
+            "email": "lihqing1403@gmail.com"
+        }
+    ],
+    "require": {
+        "php": ">=7.0",
+        "topthink/framework": "5.1.*"
+    },
+    "autoload": {
+        "psr-4": {
+            "Lihq1403\\ThinkRbac\\": "src"
+        }
+    }
+}

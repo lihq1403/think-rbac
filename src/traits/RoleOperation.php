@@ -4,11 +4,20 @@ namespace Lihq1403\ThinkRbac\traits;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
+use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
 use think\Validate;
 
 trait RoleOperation
 {
+    /**
+     * 获取所有角色 分页
+     * @param array $map
+     * @param array $field
+     * @param int $page
+     * @param int $page_rows
+     * @return array
+     */
     public function getRole($map = [], $field = [], $page = 1, $page_rows = 10)
     {
         $model = new Role();
@@ -103,6 +112,77 @@ trait RoleOperation
         // todo 删除相关用户角色关联
 
         return true;
-
     }
+
+    /**
+     * 角色分配权限 id分配
+     * @param $role_id
+     * @param array $permissions_id
+     * @return bool
+     */
+    public function assignPermission(int $role_id, array $permissions_id)
+    {
+        $model = Role::get($role_id);
+        if (empty($model)){
+            return false;
+        }
+        return $model->assignPermission($permissions_id);
+    }
+
+    /**
+     * 角色分配权限 权限组分配
+     * @param int $role_id
+     * @param string $group
+     * @return bool
+     */
+    public function assignPermissionGroup(int $role_id, string $group)
+    {
+        $model = Role::get($role_id);
+        if (empty($model)){
+            return false;
+        }
+        // 查找组下的所有权限id
+        $permissions_id = Permission::where('group', $group)->column('id');
+        if (empty($permissions_id)) {
+            return false;
+        }
+        return $model->assignPermission($permissions_id);
+    }
+
+    /**
+     * 取消分配权限 id
+     * @param int $role_id
+     * @param array $permissions_id
+     * @return bool
+     */
+    public function cancelPermission(int $role_id, array $permissions_id)
+    {
+        $model = Role::get($role_id);
+        if (empty($model)){
+            return false;
+        }
+        return $model->cancelPermission($permissions_id);
+    }
+
+    /**
+     * 取消分配权限 group
+     * @param int $role_id
+     * @param string $group
+     * @return bool
+     */
+    public function cancelPermissionGroup(int $role_id, string $group)
+    {
+        $model = Role::get($role_id);
+        if (empty($model)){
+            return false;
+        }
+        // 查找组下的所有权限id
+        $permissions_id = Permission::where('group', $group)->column('id');
+        if (empty($permissions_id)) {
+            return false;
+        }
+        return $model->cancelPermission($permissions_id);
+    }
+
+
 }

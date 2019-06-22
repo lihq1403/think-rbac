@@ -11,6 +11,11 @@ class Permission extends BaseModel
 {
     public $name = 'lihq1403_permission';
 
+    public function roles()
+    {
+        return $this->belongsToMany(Role::class);
+    }
+
     /**
      * 保存权限
      * @param array $data

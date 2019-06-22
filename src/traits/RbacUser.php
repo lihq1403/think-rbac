@@ -12,15 +12,35 @@ use Lihq1403\ThinkRbac\model\Role;
  */
 trait RbacUser
 {
-
-
     /**
      * 用户关联的角色
      * @return \think\model\relation\BelongsToMany
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class, '\\Lihq1403\\ThinkRbac\\model\\AdminUserRole');
+        return $this->belongsToMany(Role::class, '\\Lihq1403\\ThinkRbac\\model\\AdminUserRole', 'role_id', 'admin_user_id');
+    }
+
+    /**
+     * 获取用户的所有角色
+     * 重新封装数据
+     * @return array
+     */
+    public function allRoles()
+    {
+        $roles = $this->roles;
+        if (empty($roles)) {
+            return [];
+        }
+        $data = [];
+        foreach ($roles as $role) {
+            $data[] = [
+                'role_id' => $role->pivot->id,
+                'name' => $role->name,
+                'description' => $role->description,
+            ];
+        }
+        return $data;
     }
 
     /**

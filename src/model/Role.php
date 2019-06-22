@@ -10,5 +10,5 @@ namespace Lihq1403\ThinkRbac\model;
  */
 class Role extends BaseModel
 {
-
+    public $name = 'lihq1403_role';
 }

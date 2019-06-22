@@ -13,5 +13,6 @@ use think\Model;
  */
 class BaseModel extends Model
 {
+    public $autoWriteTimestamp = 'int';
 
 }

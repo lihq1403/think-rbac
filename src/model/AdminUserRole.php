@@ -9,5 +9,5 @@ namespace Lihq1403\ThinkRbac\model;
  */
 class AdminUserRole extends BaseModel
 {
-
+    public $name = 'lihq1403_admin_user';
 }

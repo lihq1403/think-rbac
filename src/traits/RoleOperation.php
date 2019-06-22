@@ -98,6 +98,7 @@ trait RoleOperation
      * @param $role_id
      * @return bool
      * @throws InvalidArgumentException
+     * @throws \Exception
      */
     public function delRole($role_id)
     {
@@ -106,11 +107,6 @@ trait RoleOperation
         }
         $model = new Role();
         $model->delRole($role_id);
-
-        // todo 删除相关角色权限关联
-
-        // todo 删除相关用户角色关联
-
         return true;
     }
 

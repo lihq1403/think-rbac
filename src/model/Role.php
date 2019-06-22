@@ -51,9 +51,15 @@ class Role extends BaseModel
      * 删除角色
      * @param $role_id
      * @return bool
+     * @throws \Exception
      */
     public function delRole($role_id)
     {
+        if (!is_array($role_id)) {
+            $role_id = [$role_id];
+        }
+        AdminUserRole::whereIn('role_id', $role_id)->delete();
+        RolePermission::whereIn('role_id', $role_id)->delete();
         return self::destroy($role_id);
     }
 

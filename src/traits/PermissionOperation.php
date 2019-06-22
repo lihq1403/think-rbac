@@ -120,18 +120,16 @@ trait PermissionOperation
      * @param $permission_id
      * @return bool
      * @throws InvalidArgumentException
+     * @throws \Exception
      */
     public function delPermission($permission_id)
     {
-        if (empty($permission_id) || $permission_id <= 0) {
+        if (empty($permission_id)) {
             throw new InvalidArgumentException('无效id');
         }
 
         $model = new Permission();
         $model->delPermission($permission_id);
-
-        // todo 删除相关角色权限关联
-
         return true;
     }
 }

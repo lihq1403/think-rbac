@@ -62,6 +62,15 @@ trait RoleOperation
             'description' => $update_data['description'] ?? '',
         ];
 
+        // 去掉空字符串数据
+        $update_data = array_filter($update_data,function ($var) {
+            if($var === '' || $var === null)
+            {
+                return false;
+            }
+            return true;
+        });
+
         // 数据验证
         $validate = Validate::make([
             'name|角色名称' => 'max:255|unique:Lihq1403\ThinkRbac\model\Role,name,'.$role_id,

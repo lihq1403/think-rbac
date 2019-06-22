@@ -32,13 +32,14 @@ trait PermissionOperation
      * @return Permission
      * @throws DataValidationException
      */
-    public function addPermission($name, $controller, $action, $description, $behavior, $module = 'admin')
+    public function addPermission($name, $controller, $action, $description, $group, $behavior, $module = 'admin')
     {
         $data = [
             'name' => $name,
             'controller' => $controller,
             'action' => $action,
             'description' => $description,
+            'group' => $group,
             'behavior' => $behavior,
             'module' => $module,
         ];
@@ -49,6 +50,7 @@ trait PermissionOperation
             'controller|访问controller' => 'require|max:255',
             'action|访问action' => 'require|max:255',
             'description|权限描述' => 'require|max:255',
+            'group|所属类别' => 'require|max:255',
             'behavior|权限行为' => 'require|max:255|in:list,add,edit,show,delete,import,export,download',
             'module|访问module' => 'require|max:255',
         ]);
@@ -80,9 +82,19 @@ trait PermissionOperation
             'controller' => $update_data['controller'] ?? '',
             'action' => $update_data['action'] ?? '',
             'description' => $update_data['description'] ?? '',
+            'group' => $update_data['group'] ?? '',
             'behavior' => $update_data['behavior'] ?? '',
             'module' => $update_data['module'] ?? '',
         ];
+
+        // 去掉空字符串数据
+        $update_data = array_filter($update_data,function ($var) {
+            if($var === '' || $var === null)
+            {
+                return false;
+            }
+            return true;
+        });
 
         // 数据验证
         $validate = Validate::make([
@@ -91,6 +103,7 @@ trait PermissionOperation
             'controller|访问controller' => 'max:255',
             'action|访问action' => 'max:255',
             'description|描述' => 'max:255',
+            'group|所属类别' => 'max:255',
             'behavior|行为' => 'max:255|in:list,add,edit,show,delete,import,export,download',
             'module|访问module' => 'max:255',
         ]);

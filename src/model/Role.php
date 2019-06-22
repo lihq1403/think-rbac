@@ -15,6 +15,14 @@ class Role extends BaseModel
     public $name = 'lihq1403_role';
 
     /**
+     * @return \think\model\relation\BelongsToMany
+     */
+    public function users()
+    {
+        return $this->belongsToMany(config('rbac.admin_user_model'));
+    }
+
+    /**
      * 保存角色
      * @param array $data
      * @return $this

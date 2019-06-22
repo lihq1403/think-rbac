@@ -4,6 +4,7 @@ namespace Lihq1403\ThinkRbac;
 
 use Lihq1403\ThinkRbac\traits\PermissionOperation;
 use Lihq1403\ThinkRbac\traits\RoleOperation;
+use Lihq1403\ThinkRbac\traits\RolePermissionOperation;
 
 class Rbac
 {
@@ -16,6 +17,15 @@ class Rbac
      * 角色相关操作方法
      */
     use RoleOperation;
+
+    /**
+     * 角色关联权限
+     */
+    use RolePermissionOperation;
+
+    /**
+     * 用户关联角色
+     */
 
 
     // 添加管理员

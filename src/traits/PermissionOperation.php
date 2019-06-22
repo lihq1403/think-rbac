@@ -15,7 +15,7 @@ trait PermissionOperation
      * @return false|\think\db\Query[]
      * @throws \think\Exception\DbException
      */
-    public function getPermission($field = [], $map = [])
+    public function allPermission($field = [], $map = [])
     {
         $model = new Permission();
         return $model->getList($map, $field);
@@ -48,8 +48,8 @@ trait PermissionOperation
             'name|权限名称' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\Permission,name',
             'controller|访问controller' => 'require|max:255',
             'action|访问action' => 'require|max:255',
-            'description|描述' => 'require|max:255',
-            'behavior|行为' => 'require|max:255|in:list,add,edit,show,delete,import,export,download',
+            'description|权限描述' => 'require|max:255',
+            'behavior|权限行为' => 'require|max:255|in:list,add,edit,show,delete,import,export,download',
             'module|访问module' => 'require|max:255',
         ]);
         if (!$validate->check($data)) {
@@ -73,7 +73,16 @@ trait PermissionOperation
         if (empty($update_data)) {
             throw new InvalidArgumentException('无更新');
         }
-        $update_data['id'] = $permission_id;
+        // 数据整理
+        $update_data = [
+            'id' =>$permission_id,
+            'name' => $update_data['name'] ?? '',
+            'controller' => $update_data['controller'] ?? '',
+            'action' => $update_data['action'] ?? '',
+            'description' => $update_data['description'] ?? '',
+            'behavior' => $update_data['behavior'] ?? '',
+            'module' => $update_data['module'] ?? '',
+        ];
 
         // 数据验证
         $validate = Validate::make([

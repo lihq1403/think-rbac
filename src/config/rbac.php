@@ -3,9 +3,10 @@
 
 return [
 
-    'admin_user' => \Lihq1403\ThinkRbac\model\AdminUser::class,
-
-
+    /**
+     * 用户表
+     */
+    'admin_user_model' => \app\common\model\AdminUser::class,
 
 
 ];

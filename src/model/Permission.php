@@ -16,6 +16,22 @@ class Permission extends BaseModel
         return $this->belongsToMany(Role::class);
     }
 
+    public function setModuleAttr($value)
+    {
+        return strtolower($value);
+    }
+
+    public function setControllerAttr($value)
+    {
+        // 去除controller
+        return str_replace("controller","", strtolower($value));
+    }
+
+    public function setActionAttr($value)
+    {
+        return strtolower($value);
+    }
+
     /**
      * 保存权限
      * @param array $data
@@ -24,7 +40,7 @@ class Permission extends BaseModel
     public function savePermission($data = [])
     {
         if (!empty($data)) {
-            $this->data($data);
+            $this->data($data, true);
         }
         if (!empty($data['id'])) {
             $this->isUpdate(true);

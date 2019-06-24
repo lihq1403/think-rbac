@@ -27,7 +27,7 @@ class Rbac extends Migrator
             ->addColumn('role_id', 'integer', ['signed' => true, 'comment' => '关联角色id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
-            ->addIndex(['admin_user_id','role_id'])
+            ->addIndex(['user_id','role_id'])
             ->save();
 
         $table = $this->table($this->permission_table,['comment'=>'权限表']);

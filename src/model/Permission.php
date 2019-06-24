@@ -9,7 +9,7 @@ namespace Lihq1403\ThinkRbac\model;
  */
 class Permission extends BaseModel
 {
-    public $name = 'lihq1403_permission';
+    public $name = 'rbac_permission';
 
     public function roles()
     {

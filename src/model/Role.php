@@ -12,14 +12,14 @@ use Lihq1403\ThinkRbac\helper\PageHelper;
  */
 class Role extends BaseModel
 {
-    public $name = 'lihq1403_role';
+    public $name = 'rbac_role';
 
     /**
      * @return \think\model\relation\BelongsToMany
      */
     public function users()
     {
-        return $this->belongsToMany(config('rbac.admin_user_model'));
+        return $this->belongsToMany(config('rbac.user_model'));
     }
 
     /**
@@ -58,7 +58,7 @@ class Role extends BaseModel
         if (!is_array($role_id)) {
             $role_id = [$role_id];
         }
-        AdminUserRole::whereIn('role_id', $role_id)->delete();
+        UserRole::whereIn('role_id', $role_id)->delete();
         RolePermission::whereIn('role_id', $role_id)->delete();
         return self::destroy($role_id);
     }

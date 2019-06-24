@@ -6,12 +6,12 @@ use think\model\Pivot;
 
 /**
  * 管理员-角色 关联表
- * Class AdminUserRole
+ * Class UserRole
  * @package Lihq1403\ThinkRbac\model
  */
-class AdminUserRole extends Pivot
+class UserRole extends Pivot
 {
-    public $name = 'lihq1403_admin_user_role';
+    public $name = 'rbac_user_role';
 
     public $autoWriteTimestamp = 'int';
 }

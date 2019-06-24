@@ -3,7 +3,7 @@
 namespace Lihq1403\ThinkRbac;
 
 use Lihq1403\ThinkRbac\exception\ForbiddenException;
-use Lihq1403\ThinkRbac\model\AdminUserRole;
+use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
 use Lihq1403\ThinkRbac\model\RolePermission;
@@ -62,7 +62,7 @@ class Rbac
         }
 
         // 获取用户的角色
-        $roles_id = AdminUserRole::where('admin_user_id', $user_id)->column('role_id');
+        $roles_id = UserRole::where('admin_user_id', $user_id)->column('role_id');
         if (empty($roles_id)) {
             throw new ForbiddenException('用户暂无分配角色');
         }

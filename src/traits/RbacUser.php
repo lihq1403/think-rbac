@@ -2,7 +2,7 @@
 
 namespace Lihq1403\ThinkRbac\traits;
 
-use Lihq1403\ThinkRbac\model\AdminUserRole;
+use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Role;
 
 /**
@@ -18,7 +18,7 @@ trait RbacUser
      */
     public function roles()
     {
-        return $this->belongsToMany(Role::class, '\\Lihq1403\\ThinkRbac\\model\\AdminUserRole', 'role_id', 'admin_user_id');
+        return $this->belongsToMany(Role::class, '\\Lihq1403\\ThinkRbac\\model\\UserRole', 'role_id', 'user_id');
     }
 
     /**
@@ -78,6 +78,6 @@ trait RbacUser
      */
     public function cancelRoles(array $roles)
     {
-        return AdminUserRole::where('admin_user_id', $this->id)->whereIn('role_id', $roles)->delete();
+        return UserRole::where('admin_user_id', $this->id)->whereIn('role_id', $roles)->delete();
     }
 }

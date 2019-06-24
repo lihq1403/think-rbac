@@ -6,14 +6,14 @@ use think\migration\db\Column;
 
 class Rbac extends Migrator
 {
-    public function init()
-    {
-
-    }
+    public $role_table = 'rbac_role';
+    public $user_role_table = 'rbac_user_role';
+    public $permission_table = 'rbac_permission';
+    public $role_permission_table = 'rbac_role_permission';
 
     public function up()
     {
-        $table = $this->table('lihq1403_role',['comment'=>'角色表']);
+        $table = $this->table($this->role_table,['comment'=>'角色表']);
         $table->addColumn('name', 'string', ['limit' => 20, 'default'=>'', 'comment' => '角色名称'])
             ->addColumn('description', 'string', ['null' => true, 'comment' => '角色描述'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
@@ -22,15 +22,15 @@ class Rbac extends Migrator
             ->addIndex(['name'], ['unique' => true])
             ->save();
 
-        $table = $this->table('lihq1403_admin_user_role',['comment'=>'用户角色表']);
-        $table->addColumn('admin_user_id', 'integer', ['signed' => true, 'comment' => '关联用户id'])
+        $table = $this->table($this->user_role_table,['comment'=>'用户角色表']);
+        $table->addColumn('user_id', 'integer', ['signed' => true, 'comment' => '关联用户id'])
             ->addColumn('role_id', 'integer', ['signed' => true, 'comment' => '关联角色id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
             ->addIndex(['admin_user_id','role_id'])
             ->save();
 
-        $table = $this->table('lihq1403_permission',['comment'=>'权限表']);
+        $table = $this->table($this->permission_table,['comment'=>'权限表']);
         $table->addColumn('name', 'string', ['default'=>'', 'comment' => '权限名称'])
             ->addColumn('description', 'string', ['null' => true, 'comment' => '权限描述'])
             ->addColumn('module', 'string', ['default'=>'', 'comment'=>'访问module'])
@@ -43,7 +43,7 @@ class Rbac extends Migrator
             ->addIndex(['name'], ['unique' => true])
             ->save();
 
-        $table = $this->table('lihq1403_role_permission',['comment'=>'角色权限表']);
+        $table = $this->table($this->role_permission_table,['comment'=>'角色权限表']);
         $table->addColumn('role_id', 'integer', ['signed' => true, 'comment' => '关联角色id'])
             ->addColumn('permission_id', 'integer', ['signed' => true, 'comment' => '关联权限id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
@@ -54,9 +54,9 @@ class Rbac extends Migrator
 
     public function down()
     {
-        $this->dropTable('lihq1403_admin_user_role');
-        $this->dropTable('lihq1403_role_permission');
-        $this->dropTable('lihq1403_role');
-        $this->dropTable('lihq1403_permission');
+        $this->dropTable($this->role_table);
+        $this->dropTable($this->user_role_table);
+        $this->dropTable($this->permission_table);
+        $this->dropTable($this->role_permission_table);
     }
 }

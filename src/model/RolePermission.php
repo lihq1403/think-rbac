@@ -11,7 +11,7 @@ use think\model\Pivot;
  */
 class RolePermission extends Pivot
 {
-    public $name = 'lihq1403_role_permission';
+    public $name = 'rbac_role_permission';
 
     public $autoWriteTimestamp = 'int';
 }

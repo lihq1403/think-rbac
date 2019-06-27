@@ -29,6 +29,7 @@ trait RbacUser
     public function allRoles()
     {
         $roles = $this->roles;
+
         if (empty($roles)) {
             return [];
         }
@@ -36,8 +37,8 @@ trait RbacUser
         foreach ($roles as $role) {
             $data[] = [
                 'role_id' => $role->pivot->id,
-                'name' => $role->name,
-                'description' => $role->description,
+                'name' => $role['name'],
+                'description' => $role['description'],
             ];
         }
         return $data;
@@ -78,6 +79,6 @@ trait RbacUser
      */
     public function cancelRoles(array $roles)
     {
-        return UserRole::where('admin_user_id', $this->id)->whereIn('role_id', $roles)->delete();
+        return UserRole::where('user_id', $this->id)->whereIn('role_id', $roles)->delete();
     }
 }

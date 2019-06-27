@@ -12,6 +12,7 @@ use Lihq1403\ThinkRbac\model\RolePermissionGroup;
 use Lihq1403\ThinkRbac\protected_traits\PermissionGroupOperation;
 use Lihq1403\ThinkRbac\protected_traits\PermissionOperation;
 use Lihq1403\ThinkRbac\protected_traits\RoleOperation;
+use Lihq1403\ThinkRbac\service\CheckService;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use think\facade\Request;
 use think\Validate;
@@ -40,12 +41,8 @@ class Rbac
      */
     use RoleOperation;
 
-
-
-
-
     /**
-     * 检查是否具有权限
+     * 检查是否具有访问权限
      * @param $user_id
      * @param string $module
      * @param string $controller
@@ -68,31 +65,12 @@ class Rbac
         }
         $action = strtolower($action);
 
-        // 获得权限id
-        $map = [
-            ['module', '=', $module],
-            ['controller', '=', $controller],
-            ['action', '=', $action],
-        ];
-        $permission_id = Permission::where($map)->value('id');
-        if (empty($permission_id)) {
-            if (config('rbac.skip_undefined_permission')) {
-                return true;
-            }
-            throw new ForbiddenException('权限规则未定义');
+        // 检查是否可以跳过
+        if (CheckService::instance()->canSkip($module, $controller, $action)) {
+            return true;
         }
 
-        // 获取用户的角色
-        $roles_id = UserRole::where('admin_user_id', $user_id)->column('role_id');
-        if (empty($roles_id)) {
-            throw new ForbiddenException('用户暂无分配角色');
-        }
-
-        // 获取用户所持有的权限id组
-        $permissions_id = RolePermissionGroup::whereIn('role_id', $roles_id)->column('permission_id');
-        if (!in_array($permission_id, $permissions_id)) {
-            throw new ForbiddenException('无权访问');
-        }
+        CheckService::instance()->checkPermission($user_id, $module, $controller, $action);
         return true;
     }
 

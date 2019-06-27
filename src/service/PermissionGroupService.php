@@ -20,6 +20,25 @@ class PermissionGroupService
     }
 
     /**
+     * 查找数据集
+     * @param array $code
+     * @return array
+     */
+    public function findIdsByCodes(array $code)
+    {
+        return PermissionGroup::whereIn('code', $code)->column('id') ?? [];
+    }
+
+    /**
+     * 所有数据
+     * @return array
+     */
+    public function findAllIds()
+    {
+        return PermissionGroup::column('id') ?? [];
+    }
+
+    /**
      * 保存数据
      * @param array $data
      * @return PermissionGroup

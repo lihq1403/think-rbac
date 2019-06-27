@@ -25,9 +25,9 @@ class Role extends BaseModel
     /**
      * @return \think\model\relation\BelongsToMany
      */
-    public function permissions()
+    public function permissionGroup()
     {
-        return $this->belongsToMany(Permission::class, '\\Lihq1403\\ThinkRbac\\model\\RolePermissionGroup', 'permission_id', 'role_id');
+        return $this->belongsToMany(PermissionGroup::class, '\\Lihq1403\\ThinkRbac\\model\\RolePermissionGroup', 'permission_group_id', 'role_id');
     }
 
     /**
@@ -79,40 +79,34 @@ class Role extends BaseModel
     }
 
     /**
-     * 角色分配权限
-     * @param array $permissions_id
+     * 角色分配权限组
+     * @param array $permissions_group_id
      * @return array|bool|\think\model\Pivot
      */
-    public function assignPermission(array $permissions_id)
+    public function assignPermissionGroup(array $permissions_group_id)
     {
-        // 检查角色是否已经存在该权限
-        $has_permissions_id = array_column($this->permissions->toArray(), 'id');
+        // 检查角色是否已经存在该权限组
+        $has_permissions_group_id = array_column($this->permissionGroup->toArray(), 'id');
 
         // 剔除已存在的权限id
-        $permissions_id = array_diff($permissions_id, $has_permissions_id);
-        if (empty($permissions_id)) {
-            return true;
-        }
-
-        // 当前可选权限id
-        $allowed_permissions_id = Permission::whereIn('id', $permissions_id)->column('id');
-        if (empty($allowed_permissions_id)) {
+        $permissions_group_id = array_diff($permissions_group_id, $has_permissions_group_id);
+        if (empty($permissions_group_id)) {
             return true;
         }
 
         // 关联添加
-        return $this->permissions()->save($allowed_permissions_id);
+        return $this->permissionGroup()->save($permissions_group_id);
     }
 
     /**
      * 取消分配的权限
-     * @param array $permissions_id
+     * @param array $permissions_group_id
      * @return int
      * @throws \think\Exception
-     * @throws \think\exception\PDOException
+     * @throws \think\exception\PDOException.
      */
-    public function cancelPermission(array $permissions_id)
+    public function cancelPermission(array $permissions_group_id)
     {
-        return RolePermissionGroup::where('role_id', $this->id)->whereIn('permission_id', $permissions_id)->delete();
+        return RolePermissionGroup::where('role_id', $this->id)->whereIn('permission_group_id', $permissions_group_id)->delete();
     }
 }

@@ -6,6 +6,8 @@ use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
+use Lihq1403\ThinkRbac\service\PermissionGroupService;
+use Lihq1403\ThinkRbac\service\PermissionService;
 use Lihq1403\ThinkRbac\service\RoleService;
 use think\Validate;
 
@@ -121,53 +123,32 @@ trait RoleOperation
     }
 
     /**
-     * 角色分配权限 id分配
-     * @param $role_id
-     * @param array $permissions_id
-     * @return bool
-     */
-    public function assignPermission(int $role_id, array $permissions_id)
-    {
-        $model = Role::get($role_id);
-        if (empty($model)){
-            return false;
-        }
-        return $model->assignPermission($permissions_id);
-    }
-
-    /**
      * 角色分配权限 权限组分配
      * @param int $role_id
      * @param string $group
      * @return bool
      */
-    public function assignPermissionGroup(int $role_id, string $group)
+    public function assignPermissionGroup(int $role_id, $group_code = [])
     {
         $model = Role::get($role_id);
         if (empty($model)){
             return false;
         }
-        // 查找组下的所有权限id
-        $permissions_id = Permission::where('group', $group)->column('id');
-        if (empty($permissions_id)) {
-            return false;
-        }
-        return $model->assignPermission($permissions_id);
-    }
 
-    /**
-     * 取消分配权限 id
-     * @param int $role_id
-     * @param array $permissions_id
-     * @return bool
-     */
-    public function cancelPermission(int $role_id, array $permissions_id)
-    {
-        $model = Role::get($role_id);
-        if (empty($model)){
+        if (!is_array($group_code)) {
+            $group_code = [$group_code];
+        }
+        if (empty($group_code)) {
+            // 如果为空，则添加所有权限组
+            $permissions_group_id = PermissionGroupService::instance()->findAllIds();
+        } else {
+            $permissions_group_id = PermissionGroupService::instance()->findIdsByCodes($group_code);
+        }
+
+        if (empty($permissions_group_id)) {
             return false;
         }
-        return $model->cancelPermission($permissions_id);
+        return $model->assignPermissionGroup($permissions_group_id);
     }
 
     /**
@@ -176,18 +157,26 @@ trait RoleOperation
      * @param string $group
      * @return bool
      */
-    public function cancelPermissionGroup(int $role_id, string $group)
+    public function cancelPermissionGroup(int $role_id, $group_code = [])
     {
         $model = Role::get($role_id);
         if (empty($model)){
             return false;
         }
-        // 查找组下的所有权限id
-        $permissions_id = Permission::where('group', $group)->column('id');
-        if (empty($permissions_id)) {
+        if (!is_array($group_code)) {
+            $group_code = [$group_code];
+        }
+
+        if (empty($group_code)) {
+            // 如果为空，则添加所有权限组
+            $permissions_group_id = PermissionGroupService::instance()->findAllIds();
+        } else {
+            $permissions_group_id = PermissionGroupService::instance()->findIdsByCodes($group_code);
+        }
+        if (empty($permissions_group_id)) {
             return false;
         }
-        return $model->cancelPermission($permissions_id);
+        return $model->cancelPermission($permissions_group_id);
     }
 
 

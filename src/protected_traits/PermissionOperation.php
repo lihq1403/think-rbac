@@ -1,5 +1,5 @@
 <?php
-namespace Lihq1403\ThinkRbac\traits;
+namespace Lihq1403\ThinkRbac\protected_traits;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;

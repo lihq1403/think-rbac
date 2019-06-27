@@ -2,26 +2,47 @@
 
 namespace Lihq1403\ThinkRbac;
 
+use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\ForbiddenException;
+use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
+use Lihq1403\ThinkRbac\model\PermissionGroup;
 use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Permission;
-use Lihq1403\ThinkRbac\model\Role;
-use Lihq1403\ThinkRbac\model\RolePermission;
-use Lihq1403\ThinkRbac\traits\PermissionOperation;
-use Lihq1403\ThinkRbac\traits\RoleOperation;
+use Lihq1403\ThinkRbac\model\RolePermissionGroup;
+use Lihq1403\ThinkRbac\protected_traits\PermissionGroupOperation;
+use Lihq1403\ThinkRbac\protected_traits\PermissionOperation;
+use Lihq1403\ThinkRbac\protected_traits\RoleOperation;
+use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use think\facade\Request;
+use think\Validate;
+
+/**
+ * 公共方法函数
+ */
+require_once 'helper/function.php';
+
 
 class Rbac
 {
     /**
-     * 权限相关操作方法
+     * 权限组
+     */
+    use PermissionGroupOperation;
+
+
+    /**
+     * 权限
      */
     use PermissionOperation;
 
     /**
-     * 角色相关操作方法
+     * 角色
      */
     use RoleOperation;
+
+
+
+
 
     /**
      * 检查是否具有权限
@@ -68,7 +89,7 @@ class Rbac
         }
 
         // 获取用户所持有的权限id组
-        $permissions_id = RolePermission::whereIn('role_id', $roles_id)->column('permission_id');
+        $permissions_id = RolePermissionGroup::whereIn('role_id', $roles_id)->column('permission_id');
         if (!in_array($permission_id, $permissions_id)) {
             throw new ForbiddenException('无权访问');
         }

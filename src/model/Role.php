@@ -27,7 +27,7 @@ class Role extends BaseModel
      */
     public function permissions()
     {
-        return $this->belongsToMany(Permission::class, '\\Lihq1403\\ThinkRbac\\model\\RolePermission', 'permission_id', 'role_id');
+        return $this->belongsToMany(Permission::class, '\\Lihq1403\\ThinkRbac\\model\\RolePermissionGroup', 'permission_id', 'role_id');
     }
 
     /**
@@ -59,7 +59,7 @@ class Role extends BaseModel
             $role_id = [$role_id];
         }
         UserRole::whereIn('role_id', $role_id)->delete();
-        RolePermission::whereIn('role_id', $role_id)->delete();
+        RolePermissionGroup::whereIn('role_id', $role_id)->delete();
         return self::destroy($role_id);
     }
 
@@ -111,6 +111,6 @@ class Role extends BaseModel
      */
     public function cancelPermission(array $permissions_id)
     {
-        return RolePermission::where('role_id', $this->id)->whereIn('permission_id', $permissions_id)->delete();
+        return RolePermissionGroup::where('role_id', $this->id)->whereIn('permission_id', $permissions_id)->delete();
     }
 }

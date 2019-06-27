@@ -61,7 +61,7 @@ class Permission extends BaseModel
             $permission_id = [$permission_id];
         }
         // 权限关联角色也要被删掉
-        RolePermission::whereIn('permission_id', $permission_id)->delete();
+        RolePermissionGroup::whereIn('permission_id', $permission_id)->delete();
         return self::destroy($permission_id);
     }
 

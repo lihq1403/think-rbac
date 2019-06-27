@@ -58,7 +58,9 @@ class Role extends BaseModel
         if (!is_array($role_id)) {
             $role_id = [$role_id];
         }
+        // 用户-角色 关联数据删除
         UserRole::whereIn('role_id', $role_id)->delete();
+        // 角色-权限组 关联数据删除
         RolePermissionGroup::whereIn('role_id', $role_id)->delete();
         return self::destroy($role_id);
     }

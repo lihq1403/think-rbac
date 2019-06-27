@@ -6,6 +6,7 @@ use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
+use Lihq1403\ThinkRbac\service\RoleService;
 use think\Validate;
 
 trait RoleOperation
@@ -46,9 +47,7 @@ trait RoleOperation
         if (!$validate->check($data)) {
             throw new DataValidationException($validate->getError());
         }
-
-        $model = new Role();
-        return $model->saveRole($data);
+        return RoleService::instance()->saveData($data);
     }
 
     /**
@@ -72,13 +71,7 @@ trait RoleOperation
         ];
 
         // 去掉空字符串数据
-        $update_data = array_filter($update_data,function ($var) {
-            if($var === '' || $var === null)
-            {
-                return false;
-            }
-            return true;
-        });
+        $update_data = array_del_empty($update_data);
 
         // 数据验证
         $validate = Validate::make([
@@ -89,8 +82,7 @@ trait RoleOperation
             throw new DataValidationException($validate->getError());
         }
 
-        $model = new Role();
-        return $model->saveRole($update_data);
+        return RoleService::instance()->saveData($update_data);
     }
 
     /**
@@ -107,6 +99,24 @@ trait RoleOperation
         }
         $model = new Role();
         $model->delRole($role_id);
+        return true;
+    }
+
+    /**
+     * 禁用角色
+     * @param $role_id
+     * @return bool
+     * @throws InvalidArgumentException
+     */
+    public function closeRole($role_id)
+    {
+        if (empty($role_id)) {
+            throw new InvalidArgumentException('无效id');
+        }
+        if (!is_array($role_id)) {
+            $role_id = [$role_id];
+        }
+        RoleService::instance()->close($role_id);
         return true;
     }
 

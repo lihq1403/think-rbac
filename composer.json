@@ -2,6 +2,7 @@
     "name": "lihq1403\/think-rbac",
     "description": "thinkphp-rbac",
     "license": "MIT",
+    "type":"think-extend",
     "authors": [
         {
             "name": "lihq1403",
@@ -10,11 +11,17 @@
     ],
     "require": {
         "php": ">=7.0",
-        "topthink/framework": "5.1.*"
+        "topthink/framework": "5.1.*",
+        "topthink/think-installer": ">=1.0.10"
     },
     "autoload": {
         "psr-4": {
             "Lihq1403\\ThinkRbac\\": "src"
+        }
+    },
+    "extra": {
+        "think-config": {
+            "rbac": "src/config/rbac.php"
         }
     }
 }

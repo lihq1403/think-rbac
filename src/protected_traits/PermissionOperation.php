@@ -4,6 +4,8 @@ namespace Lihq1403\ThinkRbac\protected_traits;
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\Permission;
+use Lihq1403\ThinkRbac\service\PermissionGroupService;
+use Lihq1403\ThinkRbac\service\PermissionService;
 use think\Validate;
 
 trait PermissionOperation
@@ -27,39 +29,42 @@ trait PermissionOperation
      * @param $controller
      * @param $action
      * @param $description
+     * @param $permission_group_code
      * @param $behavior
      * @param string $module
      * @return Permission
      * @throws DataValidationException
      */
-    public function addPermission($name, $controller, $action, $description, $group, $behavior, $module = 'admin')
+    public function addPermission($name, $controller, $action, $description, $permission_group_code, $behavior, $module = 'admin')
     {
+        // 转换权限组id
+        $permission_group_id = PermissionGroupService::instance()->findIdByCode($permission_group_code);
+
         $data = [
             'name' => $name,
+            'description' => $description,
+            'module' => $module,
             'controller' => $controller,
             'action' => $action,
-            'description' => $description,
-            'group' => $group,
             'behavior' => $behavior,
-            'module' => $module,
+            'permission_group_id' => $permission_group_id,
         ];
 
         // 数据验证
         $validate = Validate::make([
             'name|权限名称' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\Permission,name',
+            'description|权限描述' => 'require|max:255',
+            'module|访问module' => 'require|max:255',
             'controller|访问controller' => 'require|max:255',
             'action|访问action' => 'require|max:255',
-            'description|权限描述' => 'require|max:255',
-            'group|所属类别' => 'require|max:255',
-            'behavior|权限行为' => 'require|max:255|in:list,add,edit,show,delete,import,export,download',
-            'module|访问module' => 'require|max:255',
+            'permission_group_id|所属组' => 'require|max:255',
+            'behavior|权限行为' => 'require|max:255|in:'.implode(',',Permission::BEHAVIOR),
         ]);
         if (!$validate->check($data)) {
             throw new DataValidationException($validate->getError());
         }
 
-        $model = new Permission();
-        return $model->savePermission($data);
+        return PermissionService::instance()->saveData($data);
     }
 
     /**
@@ -75,44 +80,43 @@ trait PermissionOperation
         if (empty($update_data)) {
             throw new InvalidArgumentException('无更新');
         }
+        if (!empty($update_data['permission_group_code'])) {
+            // 转换权限组id
+            $permission_group_id = PermissionGroupService::instance()->findIdByCode($update_data['permission_group_code']);
+        }
+
+
         // 数据整理
         $update_data = [
             'id' =>$permission_id,
             'name' => $update_data['name'] ?? '',
+            'description' => $update_data['description'] ?? '',
+            'module' => $update_data['module'] ?? '',
             'controller' => $update_data['controller'] ?? '',
             'action' => $update_data['action'] ?? '',
-            'description' => $update_data['description'] ?? '',
-            'group' => $update_data['group'] ?? '',
+            'permission_group_id' => $permission_group_id ?? '',
             'behavior' => $update_data['behavior'] ?? '',
-            'module' => $update_data['module'] ?? '',
         ];
 
         // 去掉空字符串数据
-        $update_data = array_filter($update_data,function ($var) {
-            if($var === '' || $var === null)
-            {
-                return false;
-            }
-            return true;
-        });
+        $update_data = array_del_empty($update_data);
 
         // 数据验证
         $validate = Validate::make([
             'id|权限id' => 'require|number|max:10|gt:0',
             'name|权限名称' => 'max:255|unique:Lihq1403\ThinkRbac\model\Permission,name,'.$permission_id,
+            'description|描述' => 'max:255',
+            'module|访问module' => 'max:255',
             'controller|访问controller' => 'max:255',
             'action|访问action' => 'max:255',
-            'description|描述' => 'max:255',
-            'group|所属类别' => 'max:255',
-            'behavior|行为' => 'max:255|in:list,add,edit,show,delete,import,export,download',
-            'module|访问module' => 'max:255',
+            'permission_group_id|所属组' => 'max:255',
+            'behavior|行为' => 'max:255|in:'.implode(',',Permission::BEHAVIOR),
         ]);
         if (!$validate->check($update_data)) {
             throw new DataValidationException($validate->getError());
         }
 
-        $model = new Permission();
-        return $model->savePermission($update_data);
+        return PermissionService::instance()->saveData($update_data);
     }
 
     /**
@@ -127,9 +131,11 @@ trait PermissionOperation
         if (empty($permission_id)) {
             throw new InvalidArgumentException('无效id');
         }
+        if (!is_array($permission_id)) {
+            $permission_id = [$permission_id];
+        }
 
-        $model = new Permission();
-        $model->delPermission($permission_id);
+        PermissionService::instance()->del($permission_id);
         return true;
     }
 }

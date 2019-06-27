@@ -21,4 +21,25 @@ class PermissionService
         return true;
     }
 
+    /**
+     * 保存数据
+     * @param $data
+     * @return Permission
+     */
+    public function saveData($data)
+    {
+        $model = new Permission();
+        return $model->saveData($data);
+    }
+
+    /**
+     * 删除权限
+     * @param array $permission_id
+     * @return bool
+     */
+    public function del(array $permission_id)
+    {
+        return Permission::destroy($permission_id);
+    }
+
 }

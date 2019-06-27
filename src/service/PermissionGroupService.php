@@ -10,6 +10,16 @@ class PermissionGroupService
     use Singleton;
 
     /**
+     * 通过code查询id
+     * @param $code
+     * @return int|mixed
+     */
+    public function findIdByCode($code)
+    {
+        return PermissionGroup::where('code', $code)->value('id') ?? 0;
+    }
+
+    /**
      * 保存数据
      * @param array $data
      * @return PermissionGroup

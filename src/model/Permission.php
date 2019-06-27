@@ -11,6 +11,8 @@ class Permission extends BaseModel
 {
     public $name = 'rbac_permission';
 
+    const BEHAVIOR = ['list', 'add', 'edit', 'show', 'delete', 'import', 'export', 'download'];
+
     public function roles()
     {
         return $this->belongsToMany(Role::class);
@@ -60,8 +62,6 @@ class Permission extends BaseModel
         if (!is_array($permission_id)) {
             $permission_id = [$permission_id];
         }
-        // 权限关联角色也要被删掉
-        RolePermissionGroup::whereIn('permission_id', $permission_id)->delete();
         return self::destroy($permission_id);
     }
 

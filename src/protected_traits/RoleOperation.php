@@ -6,6 +6,7 @@ use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
+use Lihq1403\ThinkRbac\model\RolePermissionGroup;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use Lihq1403\ThinkRbac\service\PermissionService;
 use Lihq1403\ThinkRbac\service\RoleService;
@@ -21,10 +22,23 @@ trait RoleOperation
      * @param int $page_rows
      * @return array
      */
-    public function getRole($map = [], $field = [], $page = 1, $page_rows = 10)
+    public function getRoles($map = [], $field = [], $page = 1, $page_rows = 10)
     {
         $model = new Role();
         return $model->getList($map, $field, $page, $page_rows);
+    }
+
+    /**
+     * 获取角色的权限组列表
+     * @param $role_id
+     * @return array|\PDOStatement|string|\think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\ModelNotFoundException
+     * @throws \think\exception\DbException
+     */
+    public function roleHoldPermissionGroup($role_id)
+    {
+        return RoleService::instance()->roleHoldPermissionGroup($role_id);
     }
 
     /**
@@ -177,6 +191,45 @@ trait RoleOperation
             return false;
         }
         return $model->cancelPermission($permissions_group_id);
+    }
+
+    /**
+     * 更换角色权限，差值
+     * @param int $role_id
+     * @param $group_code
+     * @return bool
+     * @throws \Exception
+     */
+    public function diffPermissionGroup(int $role_id, $group_code)
+    {
+        // 获取已有权限组
+        $has_permission_group_id = RolePermissionGroup::where('role_id', $role_id)->column('permission_group_id') ?? [];
+
+        $permissions_group_id = PermissionGroupService::instance()->findIdsByCodes($group_code);
+
+        // 筛选需要删除，还是新增的权限组
+        $del = array_diff($has_permission_group_id, $permissions_group_id);
+        $add = array_diff($permissions_group_id, $has_permission_group_id);
+
+        if (!empty($del)) {
+            RolePermissionGroup::destroy(function ($query) use ($role_id, $del) {
+                $query->where('role_id', $role_id)->whereIn('permission_group_id', $del);
+            });
+        }
+
+        if (!empty($add)) {
+            $add_data = [];
+            foreach ($add as $a) {
+                $add_data[] = [
+                    'role_id' => $role_id,
+                    'permission_group_id' => $a
+                ];
+            }
+            $model = new RolePermissionGroup();
+            $model->saveAll($add_data);
+        }
+
+        return true;
     }
 
 

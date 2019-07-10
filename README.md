@@ -43,6 +43,7 @@ rbac_user_role 用户角色 中间表
 rbac_permission_group 权限组 表
 rbac_permission 权限规则 表
 rbac_role_permission_group 角色权限组 中间表
+rbac_log 请求日志 表
 ```
 在你需要用到权限的用户model里面，引入`use RbacUser;`
 ```$xslt
@@ -197,6 +198,41 @@ array(1) {
 $rbac->can(1);
 
 如果没有权限，会抛出Lihq1403\ThinkRbac\exception\ForbiddenException异常
+```
+
+### 日志相关
+##### 保存日志
+```php
+$rbac->log(1);
+
+传入用户id记录
+```
+##### 日志列表获取
+```php
+$rbac->getLogList(1,10);
+
+结果如下格式：
+array(1) {
+  ["page"] => int(1)
+  ["total"] => int(1)
+  ["list"] => array(1) {
+    [0] => array(8) {
+      ["id"] => int(3)
+      ["user_id"] => int(1)
+      ["method"] => string(3) "GET"
+      ["path"] => string(16) "api/admin/noAuth"
+      ["ip"] => string(12) "192.168.56.1"
+      ["input"] => object(stdClass)#255 (1) {
+        ["hhh"] => string(1) "2"
+      }
+      ["create_time"] => string(19) "2019-07-10 15:23:12"
+      ["user"] => array(2) {
+        ["id"] => int(1)
+        ["username"] => string(5) "admin"
+      }
+    }
+  }
+}
 ```
 
 

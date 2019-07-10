@@ -9,6 +9,7 @@ use Lihq1403\ThinkRbac\model\PermissionGroup;
 use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\RolePermissionGroup;
+use Lihq1403\ThinkRbac\protected_traits\LogOperation;
 use Lihq1403\ThinkRbac\protected_traits\PermissionGroupOperation;
 use Lihq1403\ThinkRbac\protected_traits\PermissionOperation;
 use Lihq1403\ThinkRbac\protected_traits\RoleOperation;
@@ -40,6 +41,11 @@ class Rbac
      * 角色
      */
     use RoleOperation;
+
+    /**
+     * 日志
+     */
+    use LogOperation;
 
     /**
      * 检查是否具有访问权限

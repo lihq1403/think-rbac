@@ -11,6 +11,7 @@ class Rbac extends Migrator
     public $permission_group_table = 'rbac_permission_group';
     public $permission_table = 'rbac_permission';
     public $role_permission_group_table = 'rbac_role_permission_group';
+    public $log_table = 'rbac_log';
 
     public function up()
     {
@@ -60,6 +61,17 @@ class Rbac extends Migrator
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
             ->addIndex(['permission_group_id','role_id'])
             ->save();
+
+        $table = $this->table($this->log_table,['comment'=>'操作日志表']);
+        $table->addColumn('user_id', 'integer', ['signed' => true, 'comment' => '关联用户id'])
+            ->addColumn('method', 'string', ['default'=>'', 'comment'=>'请求方式'])
+            ->addColumn('path', 'string', ['default'=>'', 'comment'=>'请求路径'])
+            ->addColumn('ip', 'integer', ['default' => 0, 'comment' => '请求ip', 'null' => false, 'signed' => false])
+            ->addColumn('input', 'text', ['comment'=>'请求参数'])
+            ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
+            ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addIndex(['user_id'])
+            ->save();
     }
 
     public function down()
@@ -69,5 +81,6 @@ class Rbac extends Migrator
         $this->dropTable($this->permission_group_table);
         $this->dropTable($this->permission_table);
         $this->dropTable($this->role_permission_group_table);
+        $this->dropTable($this->log_table);
     }
 }

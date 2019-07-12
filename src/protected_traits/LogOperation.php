@@ -21,10 +21,11 @@ trait LogOperation
      * 获取日志列表
      * @param $page
      * @param $page_rows
+     * @param array $user_field
      * @return array
      */
-    public function getLogList($page, $page_rows)
+    public function getLogList($page, $page_rows, $user_field = [])
     {
-        return LogService::instance()->getList($page, $page_rows);
+        return LogService::instance()->getList($page, $page_rows, $user_field);
     }
 }

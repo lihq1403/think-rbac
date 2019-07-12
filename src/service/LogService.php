@@ -34,15 +34,19 @@ class LogService
      * 获取日志列表
      * @param $page
      * @param $page_rows
+     * @param array $user_field
      * @return array
      */
-    public function getList($page, $page_rows)
+    public function getList($page, $page_rows, $user_field)
     {
         $pageHelper = new PageHelper(new Log());
         $order = 'create_time desc';
         $with = [
-            'user' => function($query){
-                $query->field(['id', 'username']);
+            'user' => function($query) use ($user_field){
+                if (empty($user_field)) {
+                    $user_field= ['id', 'username'];
+                }
+                $query->field($user_field);
             }
         ];
         $field = ['id', 'user_id', 'method', 'path', 'ip', 'input', 'create_time'];

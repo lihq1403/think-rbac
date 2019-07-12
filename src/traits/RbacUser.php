@@ -36,7 +36,7 @@ trait RbacUser
         $data = [];
         foreach ($roles as $role) {
             $data[] = [
-                'role_id' => $role->pivot->id,
+                'role_id' => $role->id,
                 'name' => $role['name'],
                 'description' => $role['description'],
             ];

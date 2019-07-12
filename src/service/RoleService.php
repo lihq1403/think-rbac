@@ -49,7 +49,14 @@ class RoleService
         $all_group = PermissionGroup::field(['id', 'name', 'description', 'code'])->select();
 
         // 再获取角色目前拥有的权限组id
-        $has_permission_group_id = RolePermissionGroup::where('role_id', $role_id)->column('permission_group_id');
+        if (is_array($role_id)) {
+            $has_permission_group_id = RolePermissionGroup::whereIn('role_id', $role_id)->column('permission_group_id');
+            if (!empty($has_permission_group_id)) {
+                $has_permission_group_id = array_unique($has_permission_group_id);
+            }
+        } else {
+            $has_permission_group_id = RolePermissionGroup::where('role_id', $role_id)->column('permission_group_id');
+        }
 
         foreach ($all_group as &$g) {
             if (in_array($g['id'], $has_permission_group_id)) {

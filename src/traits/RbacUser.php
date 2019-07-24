@@ -81,4 +81,32 @@ trait RbacUser
     {
         return UserRole::where('user_id', $this->id)->whereIn('role_id', $roles)->delete();
     }
+
+    /**
+     * 同步角色
+     * @param array $roles
+     * @return bool
+     * @throws \think\Exception
+     * @throws \think\exception\PDOException
+     */
+    public function diffRoles(array $roles)
+    {
+        // 检查用户已经存在的角色
+        $has_roles_id = array_column($this->roles->toArray(), 'id');
+
+        // 筛选需要删除，还是新增的权限组
+        $del = array_diff($has_roles_id, $roles);
+        $add = array_diff($roles, $has_roles_id);
+
+        if (!empty($del)) {
+            UserRole::where('user_id', $this->id)->whereIn('role_id', $del)->delete();
+        }
+
+        if (!empty($add)) {
+            // 关联添加
+            $this->roles()->save($add);
+        }
+
+        return true;
+    }
 }

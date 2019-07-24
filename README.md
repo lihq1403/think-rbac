@@ -180,6 +180,12 @@ $user->assignRoles([1,2,3]);
 ```php
 $user->cancelRoles([1,2,3]);
 ```
+
+##### 差值分配角色
+```php
+$user->diffRoles([1,2,3]);
+```
+
 ##### 用户所有角色
 ```php
 $user->allRoles();

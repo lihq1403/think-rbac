@@ -99,10 +99,12 @@ trait RbacUser
         $add = array_diff($roles, $has_roles_id);
 
         if (!empty($del)) {
+            $del = array_values($del);
             UserRole::where('user_id', $this->id)->whereIn('role_id', $del)->delete();
         }
 
         if (!empty($add)) {
+            $add = array_values($add);
             // 关联添加
             $this->roles()->save($add);
         }

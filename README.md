@@ -5,10 +5,16 @@
 
 ## 安装
 
-首先用composer安装
+1、首先用composer安装
 ```shell
 $ composer require lihq1403/think-rbac
 ```
+
+2、发布资源
+```shell
+$ php think lihq1403:rbac-publish
+```
+
 会生成一个rbac.php的配置文件在config目录下
 ```php
     /**
@@ -31,9 +37,11 @@ $ composer require lihq1403/think-rbac
         'action' => ['test']
     ],
 ```
-复制vendor/lihq1403/src/database/migrations/rbac.php迁移文件到你本系统的迁移文件的位置（一般在database/migrations）
+
+3、数据迁移
+
 ```shell
-$ php think migrate:run
+$ php think lihq1403:rbac-migrate
 ```
 然后就会发现数据库多了5张表，表字段具体内容可看代码
 
@@ -45,6 +53,9 @@ rbac_permission 权限规则 表
 rbac_role_permission_group 角色权限组 中间表
 rbac_log 请求日志 表
 ```
+
+4、使用
+
 在你需要用到权限的用户model里面，引入`use RbacUser;`
 ```$xslt
 如

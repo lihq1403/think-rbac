@@ -4,6 +4,7 @@ namespace Lihq1403\ThinkRbac\protected_traits;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
+use Lihq1403\ThinkRbac\helper\PageHelper;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\model\Role;
 use Lihq1403\ThinkRbac\model\RolePermissionGroup;
@@ -22,10 +23,9 @@ trait RoleOperation
      * @param int $page_rows
      * @return array
      */
-    public function getRoles(array $map = [], array $field = [], int $page = 1, int $page_rows = 10)
+    public function getRoles(array $map = [], array $field = [], string $order = 'id desc', int $page = 1, int $page_rows = 10)
     {
-        $model = new Role();
-        return $model->getList($map, $field, $page, $page_rows);
+        return (new PageHelper(new Role()))->where($map)->order($order)->setFields($field)->page($page)->pageRows($page_rows)->result();
     }
 
     /**
@@ -63,7 +63,7 @@ trait RoleOperation
         if (!$validate->check($data)) {
             throw new DataValidationException($validate->getError());
         }
-        return RoleService::instance()->saveData($data);
+        return Role::create($data);
     }
 
     /**
@@ -108,7 +108,7 @@ trait RoleOperation
      * @throws InvalidArgumentException
      * @throws \Exception
      */
-    public function delRole(int $role_id)
+    public function delRole($role_id)
     {
         if (empty($role_id)) {
             throw new InvalidArgumentException('无效id');

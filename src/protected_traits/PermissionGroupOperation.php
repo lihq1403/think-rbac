@@ -4,6 +4,7 @@ namespace Lihq1403\ThinkRbac\protected_traits;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
+use Lihq1403\ThinkRbac\helper\PageHelper;
 use Lihq1403\ThinkRbac\model\PermissionGroup;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use think\facade\Validate;
@@ -92,5 +93,18 @@ trait  PermissionGroupOperation
         }
         PermissionGroupService::instance()->del($permission_group_id);
         return true;
+    }
+
+    /**
+     * 获取所有权限组 分页
+     * @param array $map
+     * @param array $field
+     * @param int $page
+     * @param int $page_rows
+     * @return array
+     */
+    public function getPermissionGroups(array $map = [], array $field = [], string $order = 'id desc', int $page = 1, int $page_rows = 10)
+    {
+        return (new PageHelper(new PermissionGroup()))->where($map)->order($order)->setFields($field)->page($page)->pageRows($page_rows)->result();
     }
 }

@@ -49,19 +49,6 @@ class Role extends BaseModel
     }
 
     /**
-     * 获取所有角色分页列表
-     * @param $map
-     * @param $field
-     * @param int $page
-     * @param int $page_rows
-     * @return array
-     */
-    public function getList($map, $field, $page = 1, $page_rows = 10)
-    {
-        return (new PageHelper(new self()))->where($map)->setFields($field)->page($page)->pageRows($page_rows)->result();
-    }
-
-    /**
      * 角色分配权限组
      * @param array $permissions_group_id
      * @return array|bool|\think\model\Pivot

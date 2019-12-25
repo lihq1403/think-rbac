@@ -10,7 +10,7 @@ use Lihq1403\ThinkRbac\model\RolePermissionGroup;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use Lihq1403\ThinkRbac\service\PermissionService;
 use Lihq1403\ThinkRbac\service\RoleService;
-use think\Validate;
+use think\facade\Validate;
 
 trait RoleOperation
 {
@@ -22,7 +22,7 @@ trait RoleOperation
      * @param int $page_rows
      * @return array
      */
-    public function getRoles($map = [], $field = [], $page = 1, $page_rows = 10)
+    public function getRoles(array $map = [], array $field = [], int $page = 1, int $page_rows = 10)
     {
         $model = new Role();
         return $model->getList($map, $field, $page, $page_rows);
@@ -31,12 +31,12 @@ trait RoleOperation
     /**
      * 获取角色的权限组列表
      * @param $role_id
-     * @return array|\PDOStatement|string|\think\Collection
+     * @return array
      * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
-    public function roleHoldPermissionGroup($role_id)
+    public function roleHoldPermissionGroup(int $role_id)
     {
         return RoleService::instance()->roleHoldPermissionGroup($role_id);
     }
@@ -48,7 +48,7 @@ trait RoleOperation
      * @return Role
      * @throws DataValidationException
      */
-    public function addRole($name, $description = '')
+    public function addRole(string $name, string $description = '')
     {
         $data = [
             'name' => $name,
@@ -56,7 +56,7 @@ trait RoleOperation
         ];
 
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'name|角色名称' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\Role,name',
             'description|角色描述' => 'max:255',
         ]);
@@ -74,7 +74,7 @@ trait RoleOperation
      * @throws DataValidationException
      * @throws InvalidArgumentException
      */
-    public function editRole($role_id, array $update_data)
+    public function editRole(int $role_id, array $update_data)
     {
         if (empty($update_data)) {
             throw new InvalidArgumentException('无更新');
@@ -90,7 +90,7 @@ trait RoleOperation
         $update_data = array_del_empty($update_data);
 
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'name|角色名称' => 'max:255|unique:Lihq1403\ThinkRbac\model\Role,name,'.$role_id,
             'description|角色描述' => 'max:255',
         ]);
@@ -98,7 +98,7 @@ trait RoleOperation
             throw new DataValidationException($validate->getError());
         }
 
-        return RoleService::instance()->saveData($update_data);
+        return Role::update($update_data);
     }
 
     /**
@@ -108,7 +108,7 @@ trait RoleOperation
      * @throws InvalidArgumentException
      * @throws \Exception
      */
-    public function delRole($role_id)
+    public function delRole(int $role_id)
     {
         if (empty($role_id)) {
             throw new InvalidArgumentException('无效id');
@@ -139,12 +139,15 @@ trait RoleOperation
     /**
      * 角色分配权限 权限组分配
      * @param int $role_id
-     * @param string $group
+     * @param array $group_code
      * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function assignPermissionGroup(int $role_id, $group_code = [])
     {
-        $model = Role::get($role_id);
+        $model = Role::find($role_id);
         if (empty($model)){
             return false;
         }
@@ -168,12 +171,15 @@ trait RoleOperation
     /**
      * 取消分配权限 group
      * @param int $role_id
-     * @param string $group
+     * @param array $group_code
      * @return bool
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function cancelPermissionGroup(int $role_id, $group_code = [])
     {
-        $model = Role::get($role_id);
+        $model = Role::find($role_id);
         if (empty($model)){
             return false;
         }
@@ -200,7 +206,7 @@ trait RoleOperation
      * @return bool
      * @throws \Exception
      */
-    public function diffPermissionGroup(int $role_id, $group_code)
+    public function diffPermissionGroup(int $role_id, array $group_code)
     {
         // 获取已有权限组
         $has_permission_group_id = RolePermissionGroup::where('role_id', $role_id)->column('permission_group_id') ?? [];

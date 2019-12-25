@@ -39,17 +39,6 @@ class PermissionGroupService
     }
 
     /**
-     * 保存数据
-     * @param array $data
-     * @return PermissionGroup
-     */
-    public function saveData(array $data)
-    {
-        $model = new PermissionGroup();
-        return $model->saveData($data);
-    }
-
-    /**
      * 删除权限组
      * @param array $permission_group_id
      * @return bool

@@ -31,23 +31,6 @@ class Role extends BaseModel
     }
 
     /**
-     * 保存角色
-     * @param array $data
-     * @return $this
-     */
-    public function saveRole($data = [])
-    {
-        if (!empty($data)) {
-            $this->data($data);
-        }
-        if (!empty($data['id'])) {
-            $this->isUpdate(true);
-        }
-        $this->allowField(true)->save();
-        return $this;
-    }
-
-    /**
      * 删除角色
      * @param $role_id
      * @return bool
@@ -101,9 +84,8 @@ class Role extends BaseModel
     /**
      * 取消分配的权限
      * @param array $permissions_group_id
-     * @return int
-     * @throws \think\Exception
-     * @throws \think\exception\PDOException.
+     * @return bool
+     * @throws \Exception
      */
     public function cancelPermission(array $permissions_group_id)
     {

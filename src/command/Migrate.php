@@ -11,6 +11,6 @@ class Migrate extends Run
     protected function configure()
     {
         parent::configure();
-        $this->setName('lihq1403:rbac-migrate')->setDescription('迁移rbac数据库');
+        $this->setName('lihq1403:rbac-migrate')->setDescription('rbac数据库迁移');
     }
 }

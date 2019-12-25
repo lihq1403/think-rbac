@@ -6,18 +6,20 @@ use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use Lihq1403\ThinkRbac\service\PermissionService;
-use think\Validate;
+use think\facade\Validate;
 
 trait PermissionOperation
 {
     /**
      * 获取所有权限
-     * @param array $map
      * @param array $field
-     * @return false|\think\db\Query[]
-     * @throws \think\Exception\DbException
+     * @param array $map
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
-    public function allPermission($field = [], $map = [])
+    public function allPermission(array $field = [], array $map = [])
     {
         $model = new Permission();
         return $model->getList($map, $field);
@@ -35,7 +37,7 @@ trait PermissionOperation
      * @return Permission
      * @throws DataValidationException
      */
-    public function addPermission($name, $controller, $action, $description, $permission_group_code, $behavior, $module = 'admin')
+    public function addPermission(string $name, string $controller, string $action, string $description, string $permission_group_code, string $behavior, $module = 'admin')
     {
         // 转换权限组id
         $permission_group_id = PermissionGroupService::instance()->findIdByCode($permission_group_code);
@@ -51,7 +53,7 @@ trait PermissionOperation
         ];
 
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'name|权限名称' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\Permission,name',
             'description|权限描述' => 'require|max:255',
             'module|访问module' => 'require|max:255',
@@ -64,7 +66,7 @@ trait PermissionOperation
             throw new DataValidationException($validate->getError());
         }
 
-        return PermissionService::instance()->saveData($data);
+        return Permission::create($data);
     }
 
     /**
@@ -75,7 +77,7 @@ trait PermissionOperation
      * @throws DataValidationException
      * @throws InvalidArgumentException
      */
-    public function editPermission($permission_id, array $update_data)
+    public function editPermission(int $permission_id, array $update_data)
     {
         if (empty($update_data)) {
             throw new InvalidArgumentException('无更新');
@@ -84,7 +86,6 @@ trait PermissionOperation
             // 转换权限组id
             $permission_group_id = PermissionGroupService::instance()->findIdByCode($update_data['permission_group_code']);
         }
-
 
         // 数据整理
         $update_data = [
@@ -102,7 +103,7 @@ trait PermissionOperation
         $update_data = array_del_empty($update_data);
 
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'id|权限id' => 'require|number|max:10|gt:0',
             'name|权限名称' => 'max:255|unique:Lihq1403\ThinkRbac\model\Permission,name,'.$permission_id,
             'description|描述' => 'max:255',
@@ -116,7 +117,7 @@ trait PermissionOperation
             throw new DataValidationException($validate->getError());
         }
 
-        return PermissionService::instance()->saveData($update_data);
+        return Permission::update($update_data);
     }
 
     /**

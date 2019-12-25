@@ -6,7 +6,7 @@ use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\model\PermissionGroup;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
-use think\Validate;
+use think\facade\Validate;
 
 /**
  * 权限组相关操作
@@ -23,7 +23,7 @@ trait  PermissionGroupOperation
      * @return PermissionGroup
      * @throws DataValidationException
      */
-    public function addPermissionGroup($name, $code, $description = '')
+    public function addPermissionGroup(string $name, string $code, string $description = '')
     {
         // 数据验证
         $data = [
@@ -32,7 +32,7 @@ trait  PermissionGroupOperation
             'description' => $description
         ];
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'name|权限组名称' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\PermissionGroup',
             'description|权限描述' => 'require|max:255',
             'code|权限组唯一标识' => 'require|max:255|unique:Lihq1403\ThinkRbac\model\PermissionGroup',
@@ -41,7 +41,7 @@ trait  PermissionGroupOperation
             throw new DataValidationException($validate->getError());
         }
 
-        return PermissionGroupService::instance()->saveData($data);
+        return PermissionGroup::create($data);
     }
 
     /**
@@ -52,7 +52,7 @@ trait  PermissionGroupOperation
      * @throws DataValidationException
      * @throws InvalidArgumentException
      */
-    public function editPermissionGroup($permission_group_id, array $data)
+    public function editPermissionGroup(int $permission_group_id, array $data)
     {
         if (empty($data)) {
             throw new InvalidArgumentException('无更新');
@@ -67,7 +67,7 @@ trait  PermissionGroupOperation
         $update_data = array_del_empty($update_data);
 
         // 数据验证
-        $validate = Validate::make([
+        $validate = Validate::rule([
             'name|权限组名称' => 'max:255|unique:Lihq1403\ThinkRbac\model\PermissionGroup,name,'.$permission_group_id,
             'description|权限描述' => 'max:255',
             'code|权限组唯一标识' => 'max:255|unique:Lihq1403\ThinkRbac\model\PermissionGroup,code,'.$permission_group_id,
@@ -76,7 +76,7 @@ trait  PermissionGroupOperation
             throw new DataValidationException($validate->getError());
         }
 
-        return PermissionGroupService::instance()->saveData($data);
+        return PermissionGroup::update($update_data);
     }
 
     /**

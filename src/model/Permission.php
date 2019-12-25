@@ -35,23 +35,6 @@ class Permission extends BaseModel
     }
 
     /**
-     * 保存权限
-     * @param array $data
-     * @return $this
-     */
-    public function savePermission($data = [])
-    {
-        if (!empty($data)) {
-            $this->data($data, true);
-        }
-        if (!empty($data['id'])) {
-            $this->isUpdate(true);
-        }
-        $this->allowField(true)->save();
-        return $this;
-    }
-
-    /**
      * 删除权限
      * @param $permission_id
      * @return bool
@@ -69,11 +52,13 @@ class Permission extends BaseModel
      * 获取所有权限
      * @param $map
      * @param $field
-     * @return false|\think\db\Query[]
-     * @throws \think\Exception\DbException
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
      */
     public function getList($map, $field)
     {
-        return self::where($map)->field($field)->all();
+        return self::where($map)->field($field)->select()->toArray();
     }
 }

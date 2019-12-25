@@ -16,7 +16,7 @@ class LogService
      * @param $user_id
      * @return Log
      */
-    public function add($user_id)
+    public function add(int $user_id)
     {
         $data = [
             'user_id' => $user_id,
@@ -26,8 +26,7 @@ class LogService
             'input' => Request::param(),
         ];
 
-        $model = new Log();
-        return $model->saveData($data);
+        return Log::create($data);
     }
 
     /**
@@ -37,7 +36,7 @@ class LogService
      * @param array $user_field
      * @return array
      */
-    public function getList($page, $page_rows, $user_field)
+    public function getList(int $page, int $page_rows, array $user_field)
     {
         $pageHelper = new PageHelper(new Log());
         $order = 'create_time desc';

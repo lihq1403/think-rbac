@@ -9,9 +9,11 @@
 namespace Lihq1403\ThinkRbac\helper;
 
 
+use think\Model;
+
 class PageHelper
 {
-    protected $Model = false;
+    protected $Model = null;
     protected $where = [];
     protected $join = [];
     protected $page = 1;
@@ -26,15 +28,13 @@ class PageHelper
     protected $having = '';
     protected $or_where = [];
 
-
     /**
-     * PageHelper constructor.
-     * @param \think\Model $Model
-     *
+     * PageLib constructor.
+     * @param Model $model
      */
-    public function __construct($Model)
+    public function __construct(Model $model)
     {
-        $this->Model = $Model;
+        $this->Model = $model;
     }
 
     public function result()
@@ -50,6 +50,9 @@ class PageHelper
         return $result;
     }
 
+    /**
+     * @return int
+     */
     public function count()
     {
         $query = $this->Model;
@@ -77,6 +80,12 @@ class PageHelper
         return $query->count($this->countField);
     }
 
+    /**
+     * @return \think\Collection
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
     public function getList()
     {
         $query = $this->Model;
@@ -111,7 +120,7 @@ class PageHelper
             $query = $query->having($this->having);
         }
         $query = $query->page($this->page, $this->pageRows);
-        return $query->select()->toArray();
+        return $query->select();
     }
 
     public function where($where)
@@ -197,5 +206,4 @@ class PageHelper
         $this->or_where = $or_where;
         return $this;
     }
-
 }

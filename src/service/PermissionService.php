@@ -17,19 +17,8 @@ class PermissionService
     public function resetPermissionGroup(array $permission_group_id)
     {
         $model = new Permission();
-        $model->whereIn('permission_group_id', $permission_group_id)->data(['permission_group_id' => 0])->update();
+        $model->whereIn('permission_group_id', $permission_group_id)->update(['permission_group_id' => 0]);
         return true;
-    }
-
-    /**
-     * 保存数据
-     * @param $data
-     * @return Permission
-     */
-    public function saveData($data)
-    {
-        $model = new Permission();
-        return $model->saveData($data);
     }
 
     /**

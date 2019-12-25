@@ -31,7 +31,6 @@ class Rbac
      */
     use PermissionGroupOperation;
 
-
     /**
      * 权限
      */
@@ -59,7 +58,7 @@ class Rbac
     public function can($user_id, $module = '', $controller = '', $action = '')
     {
         if (empty($module)) {
-            $module = Request::module();
+            $module = app('http')->getName();
         }
         $module = strtolower($module);
         if (empty($controller)) {

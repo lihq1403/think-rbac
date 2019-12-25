@@ -31,22 +31,22 @@ class RoleService
     public function close(array $ids)
     {
         $model = new Role();
-        $model->whereIn('id', $ids)->data(['status' => 0])->update();
+        $model->whereIn('id', $ids)->update(['status' => 0]);
         return true;
     }
 
     /**
      * 获取角色的权限组列表
      * @param $role_id
-     * @return array|\PDOStatement|string|\think\Collection
+     * @return array
      * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
-     * @throws \think\exception\DbException
      */
     public function roleHoldPermissionGroup($role_id)
     {
         // 先获取所有权限组
-        $all_group = PermissionGroup::field(['id', 'name', 'description', 'code'])->select();
+        $all_group = PermissionGroup::field(['id', 'name', 'description', 'code'])->select()->toArray();
 
         // 再获取角色目前拥有的权限组id
         if (is_array($role_id)) {

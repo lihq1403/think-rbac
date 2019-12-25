@@ -11,7 +11,7 @@ trait LogOperation
      * @param $user_id
      * @return bool
      */
-    public function log($user_id)
+    public function log(int $user_id)
     {
         LogService::instance()->add($user_id);
         return true;
@@ -24,7 +24,7 @@ trait LogOperation
      * @param array $user_field
      * @return array
      */
-    public function getLogList($page, $page_rows, $user_field = [])
+    public function getLogList(int $page, int $page_rows, array $user_field = [])
     {
         return LogService::instance()->getList($page, $page_rows, $user_field);
     }

@@ -70,6 +70,14 @@ class Rbac
         }
         $action = strtolower($action);
 
+        if (empty($controller) || empty($action)) {
+            // 如果是空的，应该的引入了Lihq1403的完整类名，所以拿不到
+            $rule = Request::rule()->getName();
+            $rule = explode('@', $rule);
+            $controller = 'rbac';
+            $action = strtolower($rule[1] ?? '');
+        }
+
         // 检查是否可以跳过
         if (CheckService::instance()->canSkip($module, $controller, $action)) {
             return true;

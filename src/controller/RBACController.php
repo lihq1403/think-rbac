@@ -185,7 +185,7 @@ class RBACController extends BaseController
     {
         $params = $this->apiParams(['name', 'controller', 'action', 'description', 'permission_group_code', 'behavior', 'module']);
 
-        return $this->successResponse('添加成功', RBACLib::instance()->addPermission($params['name'] ?? '', $params['controller'] ?? '', $params['action'] ?? '', $params['description'] ?? '', $params['permission_group_code'] ?? '', $params['behavior'] ?? '', $params['module'] ?? 'admin'));
+        return $this->successResponse('添加成功', RBACLib::instance()->addPermission($params['name'] ?? '', $params['controller'] ?? '', $params['action'] ?? '', $params['description'] ?? ($params['name'] ?? ''), $params['permission_group_code'] ?? '', $params['behavior'] ?? '', $params['module'] ?? 'admin'));
     }
 
     /**

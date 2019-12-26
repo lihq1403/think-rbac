@@ -23,6 +23,10 @@ class CheckService
     {
         $continue_list = config('rbac.continue_list');
 
+        if (empty($continue_list)) {
+            return false;
+        }
+
         $continue_module = array_map(function ($value){
             return strtolower($value);
         }, $continue_list['module']);

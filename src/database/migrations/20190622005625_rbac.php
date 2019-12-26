@@ -20,6 +20,7 @@ class Rbac extends Migrator
             ->addColumn('description', 'string', ['null' => true, 'comment' => '角色描述'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addColumn('status', 'integer', ['limit' => \Phinx\Db\Adapter\MysqlAdapter::INT_TINY, 'default' => 1, 'comment' => '状态 1、开启 0、禁用', 'null' => false])
             ->addIndex(['name'], ['unique' => true])
             ->save();
@@ -29,6 +30,7 @@ class Rbac extends Migrator
             ->addColumn('role_id', 'integer', ['signed' => true, 'comment' => '关联角色id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addIndex(['user_id','role_id'])
             ->save();
 
@@ -38,6 +40,7 @@ class Rbac extends Migrator
             ->addColumn('code', 'string', ['default'=>'', 'null' => true, 'comment' => '权限组唯一code'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addIndex(['name', 'code'], ['unique' => true])
             ->save();
 
@@ -51,6 +54,7 @@ class Rbac extends Migrator
             ->addColumn('permission_group_id', 'integer', ['signed' => true, 'comment' => '关联权限组id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addIndex(['name'], ['unique' => true])
             ->save();
 
@@ -59,6 +63,7 @@ class Rbac extends Migrator
             ->addColumn('permission_group_id', 'integer', ['signed' => true, 'comment' => '关联权限组id'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addIndex(['permission_group_id','role_id'])
             ->save();
 
@@ -70,6 +75,7 @@ class Rbac extends Migrator
             ->addColumn('input', 'text', ['comment'=>'请求参数'])
             ->addColumn('create_time', 'integer', ['default' => 0, 'comment' => '创建时间', 'null' => false])
             ->addColumn('update_time', 'integer', ['default' => 0, 'comment' => '更新时间', 'null' => false])
+            ->addColumn('delete_time', 'integer', ['comment' => '软删', 'null' => true])
             ->addIndex(['user_id'])
             ->save();
     }

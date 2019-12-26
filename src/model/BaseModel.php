@@ -5,6 +5,7 @@ namespace Lihq1403\ThinkRbac\model;
 
 
 use think\Model;
+use think\model\concern\SoftDelete;
 
 /**
  * 基础model
@@ -14,4 +15,10 @@ use think\Model;
 class BaseModel extends Model
 {
     public $autoWriteTimestamp = 'int';
+
+    use SoftDelete;
+
+    protected $hidden = [
+        'delete_time'
+    ];
 }

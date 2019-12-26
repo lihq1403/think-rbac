@@ -13,5 +13,9 @@ class RolePermissionGroup extends Pivot
 {
     public $name = 'rbac_role_permission_group';
 
-    public $autoWriteTimestamp = 'int';
+    public $autoWriteTimestamp = true;
+
+    protected $hidden = [
+        'delete_time'
+    ];
 }

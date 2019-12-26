@@ -14,4 +14,8 @@ class UserRole extends Pivot
     public $name = 'rbac_user_role';
 
     public $autoWriteTimestamp = 'int';
+
+    protected $hidden = [
+        'delete_time'
+    ];
 }

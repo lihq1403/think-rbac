@@ -3,14 +3,22 @@
 namespace Lihq1403\ThinkRbac\controller;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
+use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
 use Lihq1403\ThinkRbac\lib\RBACLib;
 
 class RBACController extends BaseController
 {
     public $AdminUser = null;
+
+    /**
+     * @throws InvalidArgumentException
+     */
     public function initialize()
     {
         $this->AdminUser = config('rbac.user_model');
+        if (empty($this->AdminUser)) {
+            throw new InvalidArgumentException('请配置user_model');
+        }
     }
 
     /**
@@ -315,7 +323,7 @@ class RBACController extends BaseController
         if (empty($params['admin_user_id']) || empty($params['role_id'])) {
             throw new DataValidationException('参数不完整');
         }
-        if (isset($this->AdminUser::SUPER_ADMINISTRATOR_ID) && $params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID) {
+        if (!empty($this->AdminUser::SUPER_ADMINISTRATOR_ID) && ($params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID)) {
             throw new DataValidationException('无权操作');
         }
 
@@ -351,7 +359,7 @@ class RBACController extends BaseController
         if (empty($params['admin_user_id']) || empty($params['role_id'])) {
             throw new DataValidationException('参数不完整');
         }
-        if (isset($this->AdminUser::SUPER_ADMINISTRATOR_ID) && $params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID) {
+        if (!empty($this->AdminUser::SUPER_ADMINISTRATOR_ID) && ($params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID)) {
             throw new DataValidationException('无权操作');
         }
 
@@ -387,7 +395,7 @@ class RBACController extends BaseController
         if (empty($params['admin_user_id']) || empty($params['role_id'])) {
             throw new DataValidationException('参数不完整');
         }
-        if (isset($this->AdminUser::SUPER_ADMINISTRATOR_ID) && $params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID) {
+        if (!empty($this->AdminUser::SUPER_ADMINISTRATOR_ID) && ($params['admin_user_id'] == $this->AdminUser::SUPER_ADMINISTRATOR_ID)) {
             throw new DataValidationException('无权操作');
         }
 

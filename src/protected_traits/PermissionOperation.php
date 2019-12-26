@@ -3,6 +3,7 @@ namespace Lihq1403\ThinkRbac\protected_traits;
 
 use Lihq1403\ThinkRbac\exception\DataValidationException;
 use Lihq1403\ThinkRbac\exception\InvalidArgumentException;
+use Lihq1403\ThinkRbac\helper\PageHelper;
 use Lihq1403\ThinkRbac\model\Permission;
 use Lihq1403\ThinkRbac\service\PermissionGroupService;
 use Lihq1403\ThinkRbac\service\PermissionService;
@@ -41,6 +42,9 @@ trait PermissionOperation
     {
         // 转换权限组id
         $permission_group_id = PermissionGroupService::instance()->findIdByCode($permission_group_code);
+        if (empty($permission_group_id)) {
+            throw new DataValidationException('error permission_group_code');
+        }
 
         $data = [
             'name' => $name,
@@ -85,6 +89,9 @@ trait PermissionOperation
         if (!empty($update_data['permission_group_code'])) {
             // 转换权限组id
             $permission_group_id = PermissionGroupService::instance()->findIdByCode($update_data['permission_group_code']);
+            if (empty($permission_group_id)) {
+                throw new DataValidationException('error permission_group_code');
+            }
         }
 
         // 数据整理
@@ -95,7 +102,7 @@ trait PermissionOperation
             'module' => $update_data['module'] ?? '',
             'controller' => $update_data['controller'] ?? '',
             'action' => $update_data['action'] ?? '',
-            'permission_group_id' => $permission_group_id ?? '',
+            'permission_group_id' => $permission_group_id ?? 0,
             'behavior' => $update_data['behavior'] ?? '',
         ];
 
@@ -138,5 +145,22 @@ trait PermissionOperation
 
         PermissionService::instance()->del($permission_id);
         return true;
+    }
+
+    /**
+     * 获取所有权限 分页
+     * @param array $map
+     * @param array $field
+     * @param string $order
+     * @param int $page
+     * @param int $page_rows
+     * @return array
+     */
+    public function getPermissions(array $map = [], array $field = [], string $order = 'id desc', int $page = 1, int $page_rows = 10)
+    {
+        $with = [
+            'permission_group'
+        ];
+        return (new PageHelper(new Permission()))->with($with)->where($map)->order($order)->setFields($field)->page($page)->pageRows($page_rows)->result();
     }
 }

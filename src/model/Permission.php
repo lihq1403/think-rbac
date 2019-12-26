@@ -18,6 +18,11 @@ class Permission extends BaseModel
         return $this->belongsToMany(Role::class);
     }
 
+    public function permissionGroup()
+    {
+        return $this->belongsTo(PermissionGroup::class, 'permission_group_id', 'id');
+    }
+
     public function setModuleAttr($value)
     {
         return strtolower($value);

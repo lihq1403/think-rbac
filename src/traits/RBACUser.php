@@ -6,11 +6,11 @@ use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Role;
 
 /**
- * 在用户表进行 use RbacUser;
- * Trait RbacUser
+ * 在用户表进行 use RBACUser;
+ * Trait RBACUser
  * @package Lihq1403\ThinkRbac\traits
  */
-trait RbacUser
+trait RBACUser
 {
     /**
      * 用户关联的角色
@@ -73,9 +73,8 @@ trait RbacUser
     /**
      * 取消用户授权角色
      * @param array $roles
-     * @return int
-     * @throws \think\Exception
-     * @throws \think\exception\PDOException
+     * @return bool
+     * @throws \Exception
      */
     public function cancelRoles(array $roles)
     {
@@ -86,8 +85,7 @@ trait RbacUser
      * 同步角色
      * @param array $roles
      * @return bool
-     * @throws \think\Exception
-     * @throws \think\exception\PDOException
+     * @throws \Exception
      */
     public function diffRoles(array $roles)
     {

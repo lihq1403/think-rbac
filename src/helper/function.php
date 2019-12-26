@@ -1,5 +1,55 @@
 <?php
 
+if (!function_exists('pagination')) {
+    /**
+     * 获取分页配置
+     * @param $params
+     * @return array
+     */
+    function pagination($params)
+    {
+        if (empty($params['page']) || !is_numeric($params['page']) || $params['page'] <= 0) {
+            $page = 1;
+        } else {
+            $page = (int)$params['page'];
+        }
+        if (empty($params['page_rows']) || !is_numeric($params['page_rows']) || $params['page_rows'] <= 0) {
+            $page_rows = 10;
+        } else {
+            $page_rows = (int)$params['page_rows'];
+        }
+        return compact('page', 'page_rows');
+    }
+}
+
+
+if (!function_exists('array_map_function')) {
+    /**
+     * 数组递归格式化
+     * @param $array
+     * @param string|array $function
+     * @return mixed
+     */
+    function array_map_function($array, $function)
+    {
+        foreach ($array as &$item) {
+            if (is_array($item)) {
+                $item = array_map_function($item, $function);
+            } else {
+                if (is_array($function)) {
+                    foreach ($function as $func) {
+                        $item = $func($item);
+                    }
+                } else {
+                    $item = $function($item);
+                }
+            }
+        }
+        return $array;
+    }
+}
+
+
 if (!function_exists('array_del_empty')) {
     /**
      * 数组去空

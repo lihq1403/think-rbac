@@ -11,7 +11,7 @@ return [
     /**
      * 是否忽略未定义的权限
      */
-    'skip_undefined_permission' => true,
+    'skip_undefined_permission' => false,
 
     /**
      * 可以跳过权限验证的方法

@@ -21,7 +21,7 @@ class LogService
         $data = [
             'user_id' => $user_id,
             'method' => strtoupper(Request::method()),
-            'path' => Request::path(),
+            'path' => Request::rule()->getName(),
             'ip' => get_client_ip(),
             'input' => Request::param(),
         ];

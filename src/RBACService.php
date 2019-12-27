@@ -17,6 +17,7 @@ class RBACService extends Service
             'lihq1403:rbac-publish' => \Lihq1403\ThinkRbac\command\Publish::class,
             'lihq1403:rbac-migrate' => \Lihq1403\ThinkRbac\command\Migrate::class,
             'lihq1403:rbac-rollback' => \Lihq1403\ThinkRbac\command\Rollback::class,
+            'lihq1403:rbac-refresh' => \Lihq1403\ThinkRbac\command\RbacRefresh::class,
         ]);
     }
 }

@@ -59,6 +59,11 @@ class RoleService
         }
 
         foreach ($all_group as &$g) {
+            if ($role_id === 0) {
+                // 超级管理员
+                $g['hold'] = 1;
+                continue;
+            }
             if (in_array($g['id'], $has_permission_group_id)) {
                 $g['hold'] = 1;
             } else {

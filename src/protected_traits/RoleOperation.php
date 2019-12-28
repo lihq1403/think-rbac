@@ -36,7 +36,7 @@ trait RoleOperation
      * @throws \think\db\exception\DbException
      * @throws \think\db\exception\ModelNotFoundException
      */
-    public function roleHoldPermissionGroup(int $role_id)
+    public function roleHoldPermissionGroup($role_id)
     {
         return RoleService::instance()->roleHoldPermissionGroup($role_id);
     }

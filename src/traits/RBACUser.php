@@ -2,6 +2,7 @@
 
 namespace Lihq1403\ThinkRbac\traits;
 
+use Lihq1403\ThinkRbac\facade\RBAC;
 use Lihq1403\ThinkRbac\model\UserRole;
 use Lihq1403\ThinkRbac\model\Role;
 
@@ -108,5 +109,27 @@ trait RBACUser
         }
 
         return true;
+    }
+
+    /**
+     * 获取用户权限
+     * @return array
+     * @throws \think\db\exception\DataNotFoundException
+     * @throws \think\db\exception\DbException
+     * @throws \think\db\exception\ModelNotFoundException
+     */
+    public function getUserPermission()
+    {
+        if (!empty(self::SUPER_ADMINISTRATOR_ID) && $this->id == self::SUPER_ADMINISTRATOR_ID) {
+            // 如果是超级管理员，role_id 为 0
+            $roles_id = 0;
+            $this->roles = [];
+        } else {
+            // 获取该用户角色
+            $roles = $this->allRoles();
+            $roles_id = array_column($roles, 'role_id');
+        }
+//        unset($this->roles);
+        return RBAC::roleHoldPermissionGroup($roles_id);
     }
 }

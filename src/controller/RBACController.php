@@ -289,15 +289,12 @@ class RBACController extends BaseController
         if (empty($params['role_id']) || !is_numeric($params['role_id']) || $params['role_id'] < 0) {
             throw new DataValidationException('请输入正确的角色id');
         }
-        if (empty($params['group_code'])) {
-            throw new DataValidationException('请选择需要添加的权限组');
-        }
 
-        if (!is_array($params['group_code'])) {
+        if (!empty($params['group_code']) && !is_array($params['group_code'])) {
             $params['group_code'] = explode(',', $params['group_code']);
         }
 
-        RBACLib::instance()->diffPermissionGroup($params['role_id'], $params['group_code']);
+        RBACLib::instance()->diffPermissionGroup($params['role_id'], $params['group_code'] ?? []);
 
         return $this->successResponse('操作成功');
     }

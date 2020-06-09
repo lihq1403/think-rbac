@@ -20,7 +20,10 @@
     "autoload": {
         "psr-4": {
             "Lihq1403\\ThinkRbac\\": "src"
-        }
+        },
+        "files": [
+            "src/helper/function.php"
+        ]
     },
     "extra": {
         "think": {

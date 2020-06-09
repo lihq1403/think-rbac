@@ -69,7 +69,13 @@ class PageHelper
             $query = $query->group($this->group);
         }
         if (!empty($this->join)) {
-            $query = $query->join($this->join);
+            if (is_array($this->join)) {
+                foreach ($this->join as $join) {
+                    $query = $query->join($join[0], $join[1], $join[2] ?? '');
+                }
+            } else {
+                $query->join($this->join);
+            }
         }
         if (!empty($this->having)) {
             $query = $query->having($this->having);
@@ -102,7 +108,13 @@ class PageHelper
             $query = $query->group($this->group);
         }
         if (!empty($this->join)) {
-            $query = $query->join($this->join);
+            if (is_array($this->join)) {
+                foreach ($this->join as $join) {
+                    $query = $query->join($join[0], $join[1], $join[2] ?? '');
+                }
+            } else {
+                $query->join($this->join);
+            }
         }
         if (!empty($this->order)) {
             $query = $query->order($this->order);
